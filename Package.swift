@@ -2,7 +2,7 @@
 import PackageDescription
 
 let package = Package(
-    name: "psSite",
+    name: "mysite",
     platforms: [
        .macOS(.v10_15)
     ],
