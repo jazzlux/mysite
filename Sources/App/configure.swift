@@ -1,6 +1,7 @@
 import Fluent
 import FluentPostgresDriver
 import Vapor
+import Leaf
 
 // configures your application
 public func configure(_ app: Application) throws {
@@ -13,6 +14,10 @@ public func configure(_ app: Application) throws {
         password: Environment.get("DATABASE_PASSWORD") ?? "vapor_password",
         database: Environment.get("DATABASE_NAME") ?? "vapor_database"
     ), as: .psql)
+    
+    // Configure Leaf
+    app.views.use(.leaf)
+    app.leaf.cache.isEnabled = app.environment.isRelease
 
     app.migrations.add(CreateTodo())
 
