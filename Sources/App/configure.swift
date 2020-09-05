@@ -2,6 +2,7 @@ import Fluent
 import FluentPostgresDriver
 import Vapor
 import Leaf
+import JWT
 
 // configures your application
 public func configure(_ app: Application) throws {
@@ -18,7 +19,11 @@ public func configure(_ app: Application) throws {
     // Configure Leaf
     app.views.use(.leaf)
     app.leaf.cache.isEnabled = app.environment.isRelease
-
+    
+    
+    app.jwt.signers.use(.hs256(key: "secretKeys"))
+    
+    
     app.migrations.add(CreateTodo())
 
     // register routes

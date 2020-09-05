@@ -1,8 +1,11 @@
 import Fluent
 import Vapor
 import Leaf
+import AuthenticationServices
 
 func routes(_ app: Application) throws {
+    
+//MARK: Leaf tests
     
 //    struct Item: Codable {
 //        var title: String
@@ -41,18 +44,60 @@ func routes(_ app: Application) throws {
     app.get { req in
         return "It works!"
     }
-
-    app.get("hello") { req -> String in
-        return "Hello, world!"
+    
+//MARK: auth tests
+    
+    
+    let securityTest = app.grouped(UserAuthenticator())
+    
+    securityTest.get("protected") { req -> String in
+        try req.auth.require(User.self).name
     }
     
-//    app.get("index") { req in
-//        req.view.render("index", [
-//            "title": "Hi",
-//            "body": "Hello world!",
-//            "ilosc": "3"
-//        ])
-//    }
-
+    securityTest.get("notprotected") { req -> String in
+        return "nonprotected route"
+        
+    }
+    
+    let beerUser = app.grouped(BeerAuthenticator())
+    beerUser.get("beerUser") { req -> String in
+        try req.auth.require(User.self).name
+    }
+    
+    
+    app.get("jwtTest") { req -> HTTPStatus in
+        let payload = try req.jwt.verify(as: TestPayload.self)
+        print(payload)
+        
+        return .accepted
+    }
+    
+    
+    // Generate and return a new JWT.
+    app.post("login") { req -> [String: String] in
+        // Create a new instance of our JWTPayload
+        let payload = TestPayload(
+            subject: "vapor",
+            expiration: .init(value: .distantFuture),
+            isAdmin: true
+        )
+        print(try req.jwt.sign(payload))
+        // Return the signed JWT
+        return try [
+            "token": req.jwt.sign(payload)
+        ]
+    }
+    
+    
+//    MARK: Group with jwt auth
+    
+    let verySecureRoute = app.grouped(TestPayload.authenticator(), TestPayload.guardMiddleware())
+    
+    verySecureRoute.get("verySecure") { req -> HTTPStatus in
+        let user = try req.auth.require(TestPayload.self)
+        print(user.isAdmin)
+        return .ok
+    }
+    
     try app.register(collection: TodoController())
 }

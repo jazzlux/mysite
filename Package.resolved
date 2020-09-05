@@ -56,6 +56,33 @@
         }
       },
       {
+        "package": "jwt",
+        "repositoryURL": "https://github.com/vapor/jwt.git",
+        "state": {
+          "branch": null,
+          "revision": "46eddb526fa70fd9d765a3bdffac73b2be487cfc",
+          "version": "4.0.0"
+        }
+      },
+      {
+        "package": "jwt-kit",
+        "repositoryURL": "https://github.com/vapor/jwt-kit.git",
+        "state": {
+          "branch": null,
+          "revision": "50a46ba65fa4e2c1bb3783ec7464b42232a23ee2",
+          "version": "4.1.0"
+        }
+      },
+      {
+        "package": "JWTMiddleware",
+        "repositoryURL": "https://github.com/skelpo/JWTMiddleware.git",
+        "state": {
+          "branch": null,
+          "revision": "2acd0e15631f66e73d463a5635c4c7a7c20e5e67",
+          "version": "1.0.0-rc.1"
+        }
+      },
+      {
         "package": "leaf",
         "repositoryURL": "https://github.com/vapor/leaf.git",
         "state": {
