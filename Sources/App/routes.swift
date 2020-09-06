@@ -1,9 +1,14 @@
 import Fluent
+import FluentSQLiteDriver
 import Vapor
 import Leaf
 import AuthenticationServices
 
 func routes(_ app: Application) throws {
+    
+    let todoCollection = TodoController()
+    try app.register(collection: todoCollection)
+//    let secureToDo = app.grouped(User.)
     
 //MARK: Leaf tests
     

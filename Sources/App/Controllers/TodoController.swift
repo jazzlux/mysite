@@ -1,8 +1,12 @@
 import Fluent
 import Vapor
+import AuthenticationServices
 
 struct TodoController: RouteCollection {
+
+    
     func boot(routes: RoutesBuilder) throws {
+
         let todos = routes.grouped("todos")
         todos.get(use: index)
         todos.post(use: create)
@@ -12,6 +16,8 @@ struct TodoController: RouteCollection {
     }
 
     func index(req: Request) throws -> EventLoopFuture<[Todo]> {
+        let payload = try req.jwt.verify(as: TestPayload.self)
+        print(payload)
         return Todo.query(on: req.db).all()
     }
 
