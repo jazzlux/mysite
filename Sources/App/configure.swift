@@ -10,6 +10,7 @@ public func configure(_ app: Application) throws {
     // uncomment to serve files from /Public folder
     // app.middleware.use(FileMiddleware(publicDirectory: app.directory.publicDirectory))
     app.databases.use(.sqlite(.file("db.sqlite")), as: .sqlite)
+    app.passwords.use(.bcrypt)
 
 //    app.databases.use(.postgres(
 //        hostname: Environment.get("DATABASE_HOST") ?? "localhost",
@@ -23,8 +24,15 @@ public func configure(_ app: Application) throws {
     app.leaf.cache.isEnabled = app.environment.isRelease
     
     
-    app.jwt.signers.use(.hs256(key: "secretKeys"))
+    guard let secretKey = Environment.process.SECRET_KEY else {
+        fatalError("can't find secret key")
+    }
     
+    
+    app.jwt.signers.use(.hs256(key: secretKey))
+    
+    app.migrations.add(CreateUserRegistry())
+    try app.autoMigrate().wait()
     
     app.migrations.add(CreateTodo())
     try app.autoMigrate().wait()

@@ -8,6 +8,9 @@ func routes(_ app: Application) throws {
     
     let todoCollection = TodoController()
     try app.register(collection: todoCollection)
+    
+    let registrationCollection = Registration()
+    try app.register(collection: registrationCollection)
 //    let secureToDo = app.grouped(User.)
     
 //MARK: Leaf tests
